@@ -87,3 +87,75 @@ func (l *ListUndirectedGraph) GetVerticeNumber() int {
 func (l *ListUndirectedGraph) GetEdgeNumber() int {
 	return l.ne
 }
+
+func (l *ListUndirectedGraph) TravelGraphUsingDFS() {
+	result := []int{}
+	visited := map[int]struct{}{}
+	var dfs func(int)
+	dfs = func(i int) {
+		visited[i] = struct{}{}
+		result = append(result, i)
+		next := l.g[i].next
+		for next != nil {
+			node := next.node
+			if _, contain := visited[node]; !contain {
+				dfs(node)
+
+			}
+			next = next.next
+		}
+	}
+
+	for i := 0; i < l.nv; i++ {
+		if _, contain := visited[i]; !contain {
+			dfs(i)
+			fmt.Print("[")
+			for _, v := range result {
+				fmt.Printf("\t%d", v)
+			}
+			fmt.Print("]")
+			result = []int{}
+		}
+	}
+}
+
+func (l *ListUndirectedGraph) TravelGraphUsingBFS() {
+	result := []int{}
+	visited := map[int]struct{}{}
+	bfs := func(i int) {
+		// visited[i] = struct{}{}
+		// result = append(result, i)
+		queue := []int{i}
+		qlen := 1
+		for qlen > 0 {
+			tmp := queue[0]
+			queue = queue[1:]
+			visited[tmp] = struct{}{}
+			result = append(result, tmp)
+			// travel
+			next := l.g[tmp].next
+			for next != nil {
+				node := next.node
+				if _, contain := visited[node]; !contain {
+					visited[node] = struct{}{}
+					queue = append(queue, node)
+				}
+				next = next.next
+			}
+
+			qlen = len(queue)
+		}
+	}
+
+	for i := 0; i < l.nv; i++ {
+		if _, contain := visited[i]; !contain {
+			bfs(i)
+			fmt.Print("[")
+			for _, v := range result {
+				fmt.Printf("\t%d", v)
+			}
+			fmt.Print("]")
+			result = []int{}
+		}
+	}
+}

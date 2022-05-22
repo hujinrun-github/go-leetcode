@@ -8,4 +8,6 @@ type IGraph interface {
 	GetVerticeNumber() int
 	GetEdgeNumber() int
 	TravelGraph()
+	TravelGraphUsingDFS()
+	TravelGraphUsingBFS()
 }

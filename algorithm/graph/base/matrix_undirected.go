@@ -1,6 +1,8 @@
 package base
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // this file defined a struct that represent graph using adjacency matrix
 
@@ -55,4 +57,69 @@ func (m *MatrixUndirectedGraph) GetVerticeNumber() int {
 
 func (m *MatrixUndirectedGraph) GetEdgeNumber() int {
 	return m.ne
+}
+
+// travel the graph using dfs
+func (m *MatrixUndirectedGraph) TravelGraphUsingDFS() {
+	result := []int{}
+	visited := map[int]struct{}{}
+	var dfs func(int)
+	dfs = func(i int) {
+		visited[i] = struct{}{}
+		result = append(result, i)
+		for j := 0; j < m.nv; j++ {
+			if _, contain := visited[j]; !contain && m.g[i][j] > 0 {
+				dfs(j)
+			}
+		}
+	}
+
+	for i := 0; i < m.nv; i++ {
+		if _, contain := visited[i]; !contain {
+			dfs(i)
+			fmt.Print("[")
+			for _, v := range result {
+				fmt.Printf("\t%d", v)
+			}
+			fmt.Print("]")
+			result = []int{}
+		}
+	}
+}
+
+// travel the graph using bfs
+func (m *MatrixUndirectedGraph) TravelGraphUsingBFS() {
+	result := []int{}
+	visited := map[int]struct{}{}
+	bfs := func(i int) {
+		// result = append(result, i)
+		// visited[i] = struct{}{}
+		queue := []int{i}
+		qlen := 1
+		for qlen > 0 {
+			tmp := queue[0]
+			queue = queue[1:]
+			result = append(result, tmp)
+			visited[tmp] = struct{}{}
+			for j := 0; j < m.nv; j++ {
+				if _, contain := visited[j]; !contain && m.g[tmp][j] > 0 {
+					visited[j] = struct{}{}
+					queue = append(queue, j)
+				}
+			}
+			qlen = len(queue)
+		}
+	}
+
+	for i := 0; i < m.nv; i++ {
+		if _, contain := visited[i]; !contain {
+			bfs(i)
+			fmt.Print("[")
+			for _, v := range result {
+				fmt.Printf("\t%d", v)
+			}
+			fmt.Print("]")
+			result = []int{}
+		}
+	}
 }

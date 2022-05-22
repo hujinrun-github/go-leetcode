@@ -15,7 +15,7 @@ func TestListUndirectedGraph(t *testing.T) {
 	graph.InsertEdge(1, 3, 1)
 	graph.InsertEdge(2, 4, 1)
 	graph.InsertEdge(3, 4, 2)
-	graph.TravelGraph()
-	fmt.Print(graph.GetEdgeNumber())
+	graph.TravelGraphUsingBFS()
+	//fmt.Print(graph.GetEdgeNumber())
 	fmt.Printf("%+v", graph)
 }
