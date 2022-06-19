@@ -18,7 +18,9 @@ func (m *MatrixUndirectedGraph) InitGraph(nv int) {
 	for i := 0; i < nv; i++ {
 		m.g[i] = make([]int, nv)
 		for j := 0; j < nv; j++ {
-			m.g[i][j] = -1 // -1 represent the distance is infinity
+			if i != j {
+				m.g[i][j] = -1 // -1 represent the distance is infinity
+			}
 		}
 	}
 }
@@ -122,4 +124,45 @@ func (m *MatrixUndirectedGraph) TravelGraphUsingBFS() {
 			result = []int{}
 		}
 	}
+}
+
+func (m *MatrixUndirectedGraph) FindShortestPathUsingDijkstra(start, end int) int {
+	book := map[int]struct{}{}
+	dist := make([]int, m.nv)
+	// initialize the shortest path
+	for i := 0; i < m.nv; i++ {
+		if i != start {
+			if m.g[start][i] == -1 {
+				dist[i] = INT_MAX
+			} else {
+				dist[i] = m.g[start][i]
+			}
+		}
+	}
+	//fmt.Println(dist)
+
+	// find the shortest path
+	book[start] = struct{}{}
+	for len(book) != m.nv {
+		shortestNode := -1
+		shortestPath := INT_MAX
+		// find the shortest path
+		for i := 0; i < m.nv; i++ {
+			if _, contain := book[i]; !contain && dist[i] < shortestPath {
+				shortestPath = dist[i]
+				shortestNode = i
+			}
+		}
+
+		fmt.Println(dist)
+		book[shortestNode] = struct{}{}
+
+		// update 'dist'
+		for i := 0; i < m.nv; i++ {
+			if _, contain := book[i]; !contain && m.g[shortestNode][i] != -1 && dist[shortestNode]+m.g[shortestNode][i] < dist[i] {
+				dist[i] = dist[shortestNode] + m.g[shortestNode][i]
+			}
+		}
+	}
+	return dist[end]
 }

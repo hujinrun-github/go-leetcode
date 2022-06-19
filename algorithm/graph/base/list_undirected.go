@@ -159,3 +159,43 @@ func (l *ListUndirectedGraph) TravelGraphUsingBFS() {
 		}
 	}
 }
+
+func (l *ListUndirectedGraph) FindShortestPathUsingDijkstra(start, end int) int {
+	book := map[int]struct{}{}
+	dist := make([]int, l.nv)
+	// initialize the shortest path
+	for i := 0; i < l.nv; i++ {
+		if i != start {
+			dist[i] = INT_MAX
+		}
+	}
+	adj := l.g[start].next
+	for adj != nil {
+		dist[adj.node] = l.weightMap[start][adj.node]
+		adj = adj.next
+	}
+
+	book[start] = struct{}{}
+	for i := 1; i < l.nv; i++ {
+		shortestNode := -1
+		shortestPath := INT_MAX
+		// find the shortest path
+		for i := 0; i < l.nv; i++ {
+			if _, contain := book[i]; !contain && dist[i] < shortestPath {
+				shortestPath = dist[i]
+				shortestNode = i
+			}
+		}
+
+		book[shortestNode] = struct{}{}
+		// update 'dist'
+		adj := l.g[shortestNode].next
+		for adj != nil {
+			if _, contain := book[adj.node]; !contain && dist[shortestNode]+l.weightMap[shortestNode][adj.node] < dist[adj.node] {
+				dist[adj.node] = dist[shortestNode] + l.weightMap[shortestNode][adj.node]
+			}
+			adj = adj.next
+		}
+	}
+	return dist[end]
+}

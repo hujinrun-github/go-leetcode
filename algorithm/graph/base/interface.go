@@ -10,4 +10,5 @@ type IGraph interface {
 	TravelGraph()
 	TravelGraphUsingDFS()
 	TravelGraphUsingBFS()
+	FindShortestPathUsingDijkstra(int, int) int
 }
