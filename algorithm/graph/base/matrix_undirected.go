@@ -166,3 +166,54 @@ func (m *MatrixUndirectedGraph) FindShortestPathUsingDijkstra(start, end int) in
 	}
 	return dist[end]
 }
+
+func (m *MatrixUndirectedGraph) IsCircleUsingTopologySort() bool {
+	// step1 calculate the degree of each node
+	degressList := make([]int, m.nv)
+
+	for i := 0; i < m.nv; i++ {
+		count := 0
+		for j := 0; j < m.nv; j++ {
+			if i != j && m.g[i][j] != -1 {
+				count++
+			}
+		}
+
+		degressList[i] = count
+	}
+
+	// judge whether the graph is circle by topology sort
+	// step2: add the node which has the number of degree less than or equal one to queue
+	queue := []int{}
+	for i := 0; i < m.nv; i++ {
+		if degressList[i] <= 1 {
+			queue = append(queue, i)
+		}
+	}
+
+	// step3: travel queue and pop the first element, and reduce the degree of adjacent nodes by one,
+	//		  if the degree of adjacent nodes are less than or equal one, add them to queue
+	traveledMap := map[int]struct{}{}
+	for len(queue) > 0 {
+		tmpNode := queue[0]
+		queue = queue[1:]
+		traveledMap[tmpNode] = struct{}{}
+		// find the adjacent
+		for i := 0; i < m.nv; i++ {
+			if i != tmpNode && m.g[tmpNode][i] != 0 {
+				degressList[i]--
+			}
+
+			if _, ok := traveledMap[i]; !ok && degressList[i] <= 1 {
+				queue = append(queue, i)
+			}
+		}
+	}
+
+	// step4: check the number of all traveled node whether it is m.nv
+	return len(traveledMap) != m.nv
+}
+
+func (m *MatrixUndirectedGraph) IsCircleUsingDFS() bool {
+	return true
+}

@@ -36,3 +36,16 @@ func TestMatrixUndirectedDijkstraGraph(t *testing.T) {
 	//graph.TravelGraph()
 	fmt.Printf("shortest path:%d\n", graph.FindShortestPathUsingDijkstra(0, 5))
 }
+
+func TestMatrixUndirectedIsCircleUsingTopologySort(t *testing.T) {
+	//var graph IGraph
+	graph := &MatrixUndirectedGraph{}
+	graph.InitGraph(5)
+
+	graph.InsertEdge(0, 1, 1)
+	graph.InsertEdge(0, 2, 2)
+	graph.InsertEdge(1, 3, 1)
+	graph.InsertEdge(2, 4, 1)
+	//graph.TravelGraph()
+	fmt.Printf("is circle:%v\n", graph.IsCircleUsingTopologySort())
+}

@@ -199,3 +199,46 @@ func (l *ListUndirectedGraph) FindShortestPathUsingDijkstra(start, end int) int 
 	}
 	return dist[end]
 }
+
+func (l *ListUndirectedGraph) IsCircleUsingTopologySort() bool {
+	// step1: calculate the degree of each node
+	// step2: add the node which has the number of degree less than or equal one to queue
+	degressList := make([]int, l.nv)
+	queue := []int{}
+
+	for i := 0; i < l.nv; i++ {
+		count := 0
+		adj := l.g[i].next
+		for adj != nil {
+			count++
+			adj = adj.next
+		}
+
+		degressList[i] = count
+
+		if count <= 1 {
+			queue = append(queue, i)
+		}
+	}
+
+	// step3: travel queue and pop the first element, and reduce the degree of adjacent nodes by one,
+	//		  if the degree of adjacent nodes are less than or equal one, add them to queue
+	traveledMap := map[int]struct{}{}
+	for len(queue) > 0 {
+		tmpNode := queue[0]
+		queue = queue[1:]
+		traveledMap[tmpNode] = struct{}{}
+		// find the adjacent
+		adj := l.g[tmpNode].next
+		for adj != nil {
+			degressList[adj.node]--
+			if _, ok := traveledMap[adj.node]; !ok && degressList[adj.node] <= 1 {
+				queue = append(queue, adj.node)
+			}
+			adj = adj.next
+		}
+	}
+
+	// step4: check the number of all traveled node whether it is m.nv
+	return len(traveledMap) != l.nv
+}

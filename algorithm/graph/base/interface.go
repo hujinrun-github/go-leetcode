@@ -11,4 +11,5 @@ type IGraph interface {
 	TravelGraphUsingDFS()
 	TravelGraphUsingBFS()
 	FindShortestPathUsingDijkstra(int, int) int
+	IsCircleUsingTopologySort() bool
 }
